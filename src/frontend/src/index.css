@@ -1,0 +1,109 @@
+@font-face {
+  font-family: "Playfair Display";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("/assets/fonts/PlayfairDisplay.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url("/assets/fonts/JetBrainsMono.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "General Sans";
+  font-style: normal;
+  font-weight: 200 700;
+  font-display: swap;
+  src: url("/assets/fonts/GeneralSans.woff2") format("woff2");
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Warm cream editorial palette */
+    --background: 0.97 0.008 80;
+    --foreground: 0.18 0.01 60;
+
+    --card: 0.99 0.004 80;
+    --card-foreground: 0.18 0.01 60;
+
+    --popover: 0.99 0.004 80;
+    --popover-foreground: 0.18 0.01 60;
+
+    /* Wine red accent */
+    --primary: 0.42 0.14 15;
+    --primary-foreground: 0.98 0.003 80;
+
+    --secondary: 0.93 0.012 80;
+    --secondary-foreground: 0.25 0.012 60;
+
+    --muted: 0.93 0.008 80;
+    --muted-foreground: 0.52 0.012 60;
+
+    --accent: 0.93 0.012 80;
+    --accent-foreground: 0.18 0.01 60;
+
+    --destructive: 0.48 0.18 25;
+    --destructive-foreground: 0.98 0.003 80;
+
+    --border: 0.84 0.015 70;
+    --input: 0.84 0.015 70;
+    --ring: 0.42 0.14 15;
+
+    --radius: 0px;
+
+    --chart-1: 0.42 0.14 15;
+    --chart-2: 0.58 0.12 200;
+    --chart-3: 0.55 0.13 140;
+    --chart-4: 0.62 0.11 60;
+    --chart-5: 0.5 0.1 300;
+
+    --sidebar: 0.94 0.01 75;
+    --sidebar-foreground: 0.18 0.01 60;
+    --sidebar-primary: 0.42 0.14 15;
+    --sidebar-primary-foreground: 0.98 0.003 80;
+    --sidebar-accent: 0.9 0.012 75;
+    --sidebar-accent-foreground: 0.18 0.01 60;
+    --sidebar-border: 0.84 0.015 70;
+    --sidebar-ring: 0.42 0.14 15;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "General Sans", sans-serif;
+    font-feature-settings: "ss01", "ss02";
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: "Playfair Display", serif;
+  }
+}
+
+/* Editorial fine rules */
+.rule-top {
+  border-top: 3px double oklch(var(--foreground));
+}
+
+.rule-thin {
+  border-top: 1px solid oklch(var(--border));
+}
+
+/* Scanline / paper texture overlay */
+.paper-texture {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='4' height='4' fill='none'/%3E%3Cpath d='M0 0h1v1H0zm2 2h1v1H2z' fill='%23000' fill-opacity='0.025'/%3E%3C/svg%3E");
+}
