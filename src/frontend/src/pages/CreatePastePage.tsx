@@ -1,8 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useNavigate } from "@tanstack/react-router";
-import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useInternetIdentity } from "../hooks/useInternetIdentity";
@@ -38,81 +34,75 @@ export function CreatePastePage() {
   };
 
   return (
-    <section className="max-w-3xl">
-      <div className="mb-6 pb-3 border-b-2 border-foreground">
-        <h2 className="font-display text-2xl font-bold">New Paste</h2>
-        <p className="text-sm text-muted-foreground mt-1">
-          Share plain text with anyone. Pastes are public and permanent.
-        </p>
+    <section className="font-mono text-sm max-w-3xl">
+      {/* Panel header */}
+      <div className="mb-6 text-foreground">
+        <div>┌── NEW PASTE {"─".repeat(46)}┐</div>
+        <div className="flex">
+          <span>│</span>
+          <span className="flex-1 px-2 text-muted-foreground text-xs py-0.5">
+            SHARE PLAIN TEXT WITH ANYONE. PASTES ARE PUBLIC AND PERMANENT.
+          </span>
+          <span>│</span>
+        </div>
+        <div>└{"─".repeat(58)}┘</div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="space-y-2">
-          <Label
-            htmlFor="title"
-            className="text-xs tracking-widest uppercase text-muted-foreground"
-          >
-            Title
-          </Label>
-          <Input
+        {/* Title field */}
+        <div className="border border-border">
+          <div className="px-3 py-1.5 border-b border-border text-muted-foreground text-xs bg-card">
+            TITLE &gt;
+          </div>
+          <input
             id="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Give your paste a descriptive title..."
+            placeholder="ENTER A DESCRIPTIVE TITLE..."
             disabled={isPending}
             data-ocid="create_paste.input"
-            className="font-sans border-foreground/30 focus:border-primary h-11 text-base"
+            className="w-full bg-background text-foreground px-3 py-2.5 outline-none focus:bg-card placeholder:text-muted-foreground/50 disabled:opacity-50 font-mono text-sm transition-colors"
           />
         </div>
 
-        <div className="space-y-2">
-          <Label
-            htmlFor="content"
-            className="text-xs tracking-widest uppercase text-muted-foreground"
-          >
-            Content
-          </Label>
+        {/* Content field */}
+        <div className="border border-border">
+          <div className="flex items-center justify-between px-3 py-1.5 border-b border-border text-muted-foreground text-xs bg-card">
+            <span>CONTENT &gt;</span>
+            <span className="tabular-nums">
+              {content.length.toLocaleString()} CHARS
+            </span>
+          </div>
           <textarea
             id="content"
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            placeholder="Paste your text here..."
+            placeholder="PASTE YOUR TEXT HERE..."
             disabled={isPending}
             data-ocid="create_paste.textarea"
-            rows={20}
-            className="w-full font-mono text-sm border border-foreground/30 focus:border-primary bg-card text-foreground p-4 resize-y outline-none focus:ring-1 focus:ring-primary transition-colors placeholder:text-muted-foreground disabled:opacity-50"
+            rows={18}
+            className="w-full bg-background text-foreground px-3 py-2.5 outline-none focus:bg-card placeholder:text-muted-foreground/50 disabled:opacity-50 font-mono text-sm resize-y transition-colors"
           />
-          <p className="text-xs font-mono text-muted-foreground tabular-nums">
-            {content.length.toLocaleString()} character
-            {content.length !== 1 ? "s" : ""}
-          </p>
         </div>
 
-        <div className="flex items-center gap-3 pt-2">
-          <Button
+        {/* Actions */}
+        <div className="flex items-center gap-4">
+          <button
             type="submit"
             disabled={isPending || !title.trim() || !content.trim()}
             data-ocid="create_paste.submit_button"
-            className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 h-11 text-sm tracking-wider uppercase"
+            className="text-primary border border-primary px-6 py-2 hover:bg-primary hover:text-primary-foreground transition-colors disabled:opacity-40 disabled:cursor-not-allowed font-mono text-sm tracking-widest"
           >
-            {isPending ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Publishing...
-              </>
-            ) : (
-              "Publish Paste"
-            )}
-          </Button>
-          <Button
+            {isPending ? "[ PUBLISHING... ]" : "[ PUBLISH ]"}
+          </button>
+          <button
             type="button"
-            variant="ghost"
             onClick={() => navigate({ to: "/" })}
             disabled={isPending}
-            className="text-sm text-muted-foreground"
+            className="text-muted-foreground hover:text-foreground transition-colors font-mono text-sm"
           >
-            Cancel
-          </Button>
+            [ CANCEL ]
+          </button>
         </div>
       </form>
     </section>

@@ -8,6 +8,7 @@ import {
   createRouter,
 } from "@tanstack/react-router";
 import { Layout } from "./components/Layout";
+import { ThemeProvider } from "./context/ThemeContext";
 import { CreatePastePage } from "./pages/CreatePastePage";
 import { HomePage } from "./pages/HomePage";
 import { PasteDetailPage } from "./pages/PasteDetailPage";
@@ -52,9 +53,11 @@ declare module "@tanstack/react-router" {
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-      <Toaster position="bottom-right" />
-    </QueryClientProvider>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+        <Toaster position="bottom-right" />
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }

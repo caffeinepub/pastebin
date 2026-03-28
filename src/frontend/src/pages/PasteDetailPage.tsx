@@ -1,8 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useParams } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
-import { ArrowLeft, Check, Copy } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useGetPaste } from "../hooks/useQueries";
@@ -28,25 +25,23 @@ export function PasteDetailPage() {
   };
 
   return (
-    <section>
+    <section className="font-mono text-sm">
       {/* Back link */}
       <Link
         to="/"
-        className="inline-flex items-center gap-1.5 text-xs tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors mb-6"
+        data-ocid="paste_detail.back_link"
+        className="inline-block mb-6 text-muted-foreground hover:text-primary transition-colors"
       >
-        <ArrowLeft className="h-3 w-3" />
-        All Pastes
+        &larr; [ALL PASTES]
       </Link>
 
       {/* Loading */}
       {isLoading && (
-        <div data-ocid="paste_detail.loading_state" className="space-y-4">
-          <Skeleton className="h-8 w-2/3 bg-muted" />
-          <div className="flex gap-6">
-            <Skeleton className="h-4 w-40 bg-muted" />
-            <Skeleton className="h-4 w-32 bg-muted" />
-          </div>
-          <Skeleton className="h-64 w-full bg-muted mt-4" />
+        <div
+          data-ocid="paste_detail.loading_state"
+          className="border border-border p-8 text-center text-muted-foreground"
+        >
+          [ LOADING... ]
         </div>
       )}
 
@@ -54,14 +49,12 @@ export function PasteDetailPage() {
       {isError && (
         <div
           data-ocid="paste_detail.error_state"
-          className="border border-destructive/30 bg-destructive/5 p-8 text-center"
+          className="border border-destructive/60 p-8 text-center text-destructive"
         >
-          <p className="font-display text-lg text-destructive">
-            Failed to load paste.
-          </p>
-          <p className="text-sm text-muted-foreground mt-1 font-mono">
-            The paste may not exist or there was a network error.
-          </p>
+          [ ERROR: FAILED TO LOAD PASTE ]<br />
+          <span className="text-muted-foreground text-xs">
+            THE PASTE MAY NOT EXIST OR THERE WAS A NETWORK ERROR.
+          </span>
         </div>
       )}
 
@@ -69,72 +62,63 @@ export function PasteDetailPage() {
       {!isLoading && !isError && paste === null && (
         <div
           data-ocid="paste_detail.error_state"
-          className="border border-dashed border-border p-8 text-center"
+          className="border border-border p-8 text-center text-muted-foreground"
         >
-          <p className="font-display text-xl text-muted-foreground">
-            Paste not found.
-          </p>
-          <p className="text-sm text-muted-foreground mt-1">
-            This paste may have been removed.
-          </p>
+          [ PASTE NOT FOUND ]<br />
+          <span className="text-xs">THIS PASTE MAY HAVE BEEN REMOVED.</span>
         </div>
       )}
 
       {/* Paste content */}
       {!isLoading && paste && (
-        <>
-          {/* Header */}
-          <div className="pb-4 mb-6 border-b-2 border-foreground">
-            <h2 className="font-display text-3xl md:text-4xl font-bold leading-tight break-words">
-              {paste.title || "Untitled"}
-            </h2>
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-1 mt-3">
-              <span className="font-mono text-xs text-muted-foreground">
-                <span className="uppercase tracking-wider mr-1">by</span>
-                {truncatePrincipal(paste.author.toString())}
+        <div>
+          {/* TUI Window */}
+          <div className="border border-border">
+            {/* Title bar */}
+            <div className="border-b border-border bg-card px-3 py-1.5 flex items-center justify-between">
+              <span className="text-primary font-bold tracking-wide truncate">
+                ┌── {(paste.title || "UNTITLED").toUpperCase()}{" "}
+                {"─".repeat(
+                  Math.max(0, 40 - (paste.title || "UNTITLED").length),
+                )}
               </span>
-              <span className="font-mono text-xs text-muted-foreground">
-                {formatDate(paste.createdAt)}
-              </span>
+              <button
+                type="button"
+                onClick={handleCopy}
+                data-ocid="paste_detail.copy_button"
+                className="ml-4 shrink-0 text-foreground hover:text-primary border border-border hover:border-primary px-3 py-0.5 transition-colors text-xs"
+              >
+                {copied ? "[ COPIED! ]" : "[ COPY ]"}
+              </button>
             </div>
-          </div>
 
-          {/* Actions bar */}
-          <div className="flex justify-end mb-4">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleCopy}
-              data-ocid="paste_detail.copy_button"
-              className="text-xs tracking-wider uppercase border-foreground/30 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors h-8 px-4"
-            >
-              {copied ? (
-                <>
-                  <Check className="h-3.5 w-3.5 mr-1.5" />
-                  Copied
-                </>
-              ) : (
-                <>
-                  <Copy className="h-3.5 w-3.5 mr-1.5" />
-                  Copy
-                </>
-              )}
-            </Button>
-          </div>
+            {/* Meta row */}
+            <div className="border-b border-border px-3 py-1.5 flex flex-wrap gap-x-6 gap-y-1 text-xs text-muted-foreground bg-card">
+              <span>
+                BY: {truncatePrincipal(paste.author.toString()).toUpperCase()}
+              </span>
+              <span>│</span>
+              <span>DATE: {formatDate(paste.createdAt).toUpperCase()}</span>
+              <span>│</span>
+              <span>{paste.content.length.toLocaleString()} CHARS</span>
+            </div>
 
-          {/* Content box */}
-          <div className="border border-foreground/20 bg-card">
-            <pre className="font-mono text-sm text-foreground p-6 overflow-x-auto whitespace-pre-wrap break-words leading-relaxed">
+            {/* Divider */}
+            <div className="border-b border-border px-3 py-0 text-border text-xs">
+              {"─".repeat(60)}
+            </div>
+
+            {/* Content */}
+            <pre className="text-foreground px-3 py-4 overflow-x-auto whitespace-pre-wrap break-words leading-relaxed font-mono text-sm bg-background">
               {paste.content}
             </pre>
-          </div>
 
-          {/* Char count */}
-          <p className="text-xs font-mono text-muted-foreground mt-3 text-right">
-            {paste.content.length.toLocaleString()} character
-            {paste.content.length !== 1 ? "s" : ""}
-          </p>
-        </>
+            {/* Bottom border */}
+            <div className="border-t border-border px-3 py-1 text-xs text-muted-foreground bg-card">
+              └{"─".repeat(58)}┘
+            </div>
+          </div>
+        </div>
       )}
     </section>
   );

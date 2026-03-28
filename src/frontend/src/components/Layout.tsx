@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { FilePlus, LogIn, LogOut } from "lucide-react";
+import { useTheme } from "../context/ThemeContext";
 import { useInternetIdentity } from "../hooks/useInternetIdentity";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const { login, clear, loginStatus, identity, isInitializing } =
     useInternetIdentity();
+  const { darkMode, toggleDarkMode } = useTheme();
   const isLoggedIn = !!identity;
   const navigate = useNavigate();
 
@@ -14,93 +14,116 @@ export function Layout({ children }: { children: React.ReactNode }) {
     navigate({ to: "/" });
   };
 
+  const authStatus = isInitializing
+    ? "STATUS: INIT..."
+    : isLoggedIn
+      ? "STATUS: AUTHENTICATED"
+      : "STATUS: GUEST";
+
   return (
-    <div className="min-h-screen bg-background paper-texture flex flex-col">
-      {/* Masthead */}
-      <header className="border-b-2 border-foreground">
-        <div className="max-w-5xl mx-auto px-4">
-          {/* Top bar */}
-          <div className="flex items-center justify-between py-2 rule-thin border-b border-border">
-            <p className="text-xs tracking-widest uppercase text-muted-foreground font-sans">
-              Plain Text Archive
-            </p>
-            <div className="flex items-center gap-2">
-              {!isInitializing && !isLoggedIn && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={login}
-                  disabled={loginStatus === "logging-in"}
-                  data-ocid="nav.login_button"
-                  className="text-xs tracking-wider uppercase h-7 px-3 hover:bg-primary hover:text-primary-foreground transition-colors"
+    <div className="min-h-screen bg-background text-foreground flex flex-col font-mono">
+      {/* Terminal Header */}
+      <header className="w-full">
+        <div className="max-w-5xl mx-auto px-4 pt-4">
+          {/* Top border */}
+          <div className="text-foreground text-sm leading-none">
+            <div>┌{"─".repeat(68)}┐</div>
+            <div className="flex items-center">
+              <span>│</span>
+              <span className="flex-1 px-2 tracking-widest text-primary font-bold">
+                PASTEVAULT :: PLAIN TEXT ARCHIVE
+              </span>
+              <span className="px-2 text-muted-foreground text-xs">
+                {authStatus}
+              </span>
+              <span>│</span>
+            </div>
+            <div>├{"─".repeat(68)}┤</div>
+            {/* Nav row */}
+            <div className="flex items-center">
+              <span>│</span>
+              <span className="flex-1 flex items-center gap-1 px-2 py-0.5">
+                <Link
+                  to="/"
+                  data-ocid="nav.home_link"
+                  className="text-foreground hover:text-primary transition-colors"
                 >
-                  <LogIn className="h-3 w-3 mr-1.5" />
-                  {loginStatus === "logging-in" ? "Signing in..." : "Sign In"}
-                </Button>
-              )}
-              {isLoggedIn && (
-                <>
-                  <Link to="/create">
-                    <Button
-                      size="sm"
-                      data-ocid="nav.create_button"
-                      className="text-xs tracking-wider uppercase h-7 px-3 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-                    >
-                      <FilePlus className="h-3 w-3 mr-1.5" />
-                      New Paste
-                    </Button>
+                  [HOME]
+                </Link>
+                {isLoggedIn && (
+                  <Link
+                    to="/create"
+                    data-ocid="nav.create_button"
+                    className="ml-2 text-foreground hover:text-primary transition-colors"
+                  >
+                    [NEW PASTE]
                   </Link>
-                  <Button
-                    variant="ghost"
-                    size="sm"
+                )}
+              </span>
+              <span className="px-2 flex items-center gap-2">
+                {/* Dark/Light mode toggle */}
+                <button
+                  type="button"
+                  onClick={toggleDarkMode}
+                  data-ocid="nav.toggle"
+                  className="text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+                  title={
+                    darkMode ? "Switch to light mode" : "Switch to dark mode"
+                  }
+                >
+                  {darkMode ? "[LIGHT]" : "[DARK]"}
+                </button>
+                {!isInitializing && !isLoggedIn && (
+                  <button
+                    type="button"
+                    onClick={login}
+                    disabled={loginStatus === "logging-in"}
+                    data-ocid="nav.login_button"
+                    className="text-foreground hover:text-primary transition-colors disabled:opacity-50 cursor-pointer"
+                  >
+                    {loginStatus === "logging-in"
+                      ? "[SIGNING IN...]"
+                      : "[SIGN IN]"}
+                  </button>
+                )}
+                {isLoggedIn && (
+                  <button
+                    type="button"
                     onClick={handleLogout}
                     data-ocid="nav.logout_button"
-                    className="text-xs tracking-wider uppercase h-7 px-3"
+                    className="text-foreground hover:text-primary transition-colors cursor-pointer"
                   >
-                    <LogOut className="h-3 w-3 mr-1.5" />
-                    Sign Out
-                  </Button>
-                </>
-              )}
+                    [SIGN OUT]
+                  </button>
+                )}
+              </span>
+              <span>│</span>
             </div>
-          </div>
-
-          {/* Masthead title */}
-          <div className="py-5 text-center border-b-2 border-foreground">
-            <Link to="/" className="block">
-              <h1 className="font-display text-4xl md:text-6xl font-bold tracking-tight text-foreground leading-none">
-                PasteVault
-              </h1>
-              <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground mt-1">
-                Share · Preserve · Reference
-              </p>
-            </Link>
+            <div>└{"─".repeat(68)}┘</div>
           </div>
         </div>
       </header>
 
       {/* Main content */}
-      <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-8">
+      <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-6">
         {children}
       </main>
 
-      {/* Footer */}
-      <footer className="border-t-2 border-foreground">
-        <div className="max-w-5xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="text-xs text-muted-foreground font-mono">
-            PasteVault — plain text, no frills
-          </p>
-          <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()}.{" "}
+      {/* Footer status bar */}
+      <footer className="w-full">
+        <div className="max-w-5xl mx-auto px-4 pb-4">
+          <div className="text-muted-foreground text-xs text-center">
+            ┤{" "}
             <a
               href={`https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(window.location.hostname)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-primary transition-colors underline underline-offset-2"
+              className="hover:text-primary transition-colors"
             >
-              Built with ♥ using caffeine.ai
+              PASTEVAULT v1.0 · BUILT WITH ♥ USING CAFFEINE.AI
             </a>
-          </p>
+            {" ├"}
+          </div>
         </div>
       </footer>
     </div>

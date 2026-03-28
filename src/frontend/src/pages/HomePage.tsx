@@ -1,7 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, FileText } from "lucide-react";
-import { motion } from "motion/react";
 import { useListPastes } from "../hooks/useQueries";
 import { truncatePrincipal } from "../utils/format";
 import { formatDistanceToNow } from "../utils/time";
@@ -10,30 +7,29 @@ export function HomePage() {
   const { data: pastes, isLoading, isError } = useListPastes();
 
   return (
-    <section>
+    <section className="font-mono text-sm">
       {/* Section header */}
-      <div className="mb-6 pb-3 border-b-2 border-foreground flex items-baseline justify-between">
-        <h2 className="font-display text-2xl font-bold">Recent Pastes</h2>
-        {pastes && (
-          <span className="text-xs font-mono text-muted-foreground tabular-nums">
-            {pastes.length} {pastes.length === 1 ? "entry" : "entries"}
+      <div className="mb-4 text-foreground">
+        <div>┌── RECENT PASTES {"─".repeat(44)}┐</div>
+        <div className="flex">
+          <span>│</span>
+          <span className="flex-1 px-2 text-muted-foreground text-xs py-0.5">
+            {pastes
+              ? `${pastes.length} ${pastes.length === 1 ? "ENTRY" : "ENTRIES"} IN ARCHIVE`
+              : "QUERYING ARCHIVE..."}
           </span>
-        )}
+          <span>│</span>
+        </div>
+        <div>└{"─".repeat(58)}┘</div>
       </div>
 
       {/* Loading */}
       {isLoading && (
-        <div data-ocid="paste_list.loading_state" className="space-y-0">
-          {([1, 2, 3, 4, 5, 6] as const).map((n) => (
-            <div
-              key={n}
-              className="border-b border-border py-4 flex items-center gap-4"
-            >
-              <Skeleton className="h-4 w-48 bg-muted" />
-              <Skeleton className="h-4 w-24 ml-auto bg-muted" />
-              <Skeleton className="h-4 w-20 bg-muted" />
-            </div>
-          ))}
+        <div
+          data-ocid="paste_list.loading_state"
+          className="text-center py-8 text-muted-foreground border border-border"
+        >
+          [ LOADING... ]
         </div>
       )}
 
@@ -41,11 +37,9 @@ export function HomePage() {
       {isError && (
         <div
           data-ocid="paste_list.error_state"
-          className="border border-destructive/30 bg-destructive/5 p-6 text-center"
+          className="border border-destructive/60 p-6 text-center text-destructive"
         >
-          <p className="text-sm text-destructive font-mono">
-            Failed to load pastes. Please refresh.
-          </p>
+          [ ERROR: FAILED TO LOAD PASTES. PLEASE REFRESH. ]
         </div>
       )}
 
@@ -53,63 +47,48 @@ export function HomePage() {
       {!isLoading && !isError && pastes?.length === 0 && (
         <div
           data-ocid="paste_list.empty_state"
-          className="py-20 text-center border border-dashed border-border"
+          className="border border-border py-12 text-center"
         >
-          <FileText
-            className="h-8 w-8 mx-auto mb-4 text-muted-foreground"
-            strokeWidth={1}
-          />
-          <p className="font-display text-xl text-muted-foreground">
-            No pastes yet.
-          </p>
-          <p className="text-sm text-muted-foreground mt-1">
-            Sign in to create the first one.
-          </p>
+          <div className="text-muted-foreground">
+            <div>┌{"─".repeat(28)}┐</div>
+            <div>│ [ NO PASTES FOUND ] │</div>
+            <div>│ SIGN IN TO CREATE ONE │</div>
+            <div>└{"─".repeat(28)}┘</div>
+          </div>
         </div>
       )}
 
       {/* Paste list */}
       {!isLoading && !isError && pastes && pastes.length > 0 && (
-        <div className="divide-y divide-border" data-ocid="paste_list.table">
+        <div data-ocid="paste_list.table" className="border border-border">
           {/* Column headers */}
-          <div className="hidden md:grid grid-cols-[1fr_160px_140px_32px] gap-4 py-2 px-3 bg-muted">
-            <span className="text-xs tracking-widest uppercase text-muted-foreground font-sans">
-              Title
-            </span>
-            <span className="text-xs tracking-widest uppercase text-muted-foreground font-sans">
-              Author
-            </span>
-            <span className="text-xs tracking-widest uppercase text-muted-foreground font-sans">
-              Posted
-            </span>
-            <span />
+          <div className="grid grid-cols-[1fr_180px_120px] border-b border-border bg-card">
+            <div className="px-3 py-1.5 text-xs text-muted-foreground border-r border-border">
+              TITLE
+            </div>
+            <div className="px-3 py-1.5 text-xs text-muted-foreground border-r border-border">
+              AUTHOR
+            </div>
+            <div className="px-3 py-1.5 text-xs text-muted-foreground">AGE</div>
           </div>
-
           {pastes.map((paste, index) => (
-            <motion.div
+            <Link
               key={paste.id.toString()}
-              initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.04, duration: 0.2 }}
-              data-ocid={`paste_list.row.${index + 1}`}
+              to="/paste/$id"
+              params={{ id: paste.id.toString() }}
+              data-ocid={`paste_list.item.${index + 1}`}
+              className="grid grid-cols-[1fr_180px_120px] border-b border-border last:border-b-0 hover:bg-accent transition-colors group"
             >
-              <Link
-                to="/paste/$id"
-                params={{ id: paste.id.toString() }}
-                className="grid grid-cols-1 md:grid-cols-[1fr_160px_140px_32px] gap-1 md:gap-4 py-4 px-3 hover:bg-accent transition-colors group items-center"
-              >
-                <span className="font-display text-base font-semibold text-foreground group-hover:text-primary transition-colors truncate">
-                  {paste.title || "Untitled"}
-                </span>
-                <span className="font-mono text-xs text-muted-foreground truncate">
-                  {truncatePrincipal(paste.author.toString())}
-                </span>
-                <span className="font-mono text-xs text-muted-foreground">
-                  {formatDistanceToNow(paste.createdAt)}
-                </span>
-                <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all hidden md:block" />
-              </Link>
-            </motion.div>
+              <div className="px-3 py-2 text-foreground group-hover:text-primary transition-colors truncate border-r border-border">
+                &gt; {paste.title || "UNTITLED"}
+              </div>
+              <div className="px-3 py-2 text-muted-foreground truncate border-r border-border text-xs">
+                {truncatePrincipal(paste.author.toString())}
+              </div>
+              <div className="px-3 py-2 text-muted-foreground text-xs">
+                {formatDistanceToNow(paste.createdAt)}
+              </div>
+            </Link>
           ))}
         </div>
       )}

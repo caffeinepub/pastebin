@@ -1,25 +1,9 @@
 @font-face {
-  font-family: "Playfair Display";
-  font-style: normal;
-  font-weight: 400 800;
-  font-display: swap;
-  src: url("/assets/fonts/PlayfairDisplay.woff2") format("woff2");
-}
-
-@font-face {
   font-family: "JetBrains Mono";
   font-style: normal;
   font-weight: 300 700;
   font-display: swap;
   src: url("/assets/fonts/JetBrainsMono.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: "General Sans";
-  font-style: normal;
-  font-weight: 200 700;
-  font-display: swap;
-  src: url("/assets/fonts/GeneralSans.woff2") format("woff2");
 }
 
 @tailwind base;
@@ -28,52 +12,91 @@
 
 @layer base {
   :root {
-    /* Warm cream editorial palette */
-    --background: 0.97 0.008 80;
-    --foreground: 0.18 0.01 60;
+    /* Amber-on-black TUI palette (dark default) */
+    --background: 0.07 0 0;
+    --foreground: 0.78 0.15 75;
 
-    --card: 0.99 0.004 80;
-    --card-foreground: 0.18 0.01 60;
+    --card: 0.1 0 0;
+    --card-foreground: 0.78 0.15 75;
 
-    --popover: 0.99 0.004 80;
-    --popover-foreground: 0.18 0.01 60;
+    --popover: 0.1 0 0;
+    --popover-foreground: 0.78 0.15 75;
 
-    /* Wine red accent */
-    --primary: 0.42 0.14 15;
-    --primary-foreground: 0.98 0.003 80;
+    --primary: 0.85 0.18 75;
+    --primary-foreground: 0.07 0 0;
 
-    --secondary: 0.93 0.012 80;
-    --secondary-foreground: 0.25 0.012 60;
+    --secondary: 0.13 0 0;
+    --secondary-foreground: 0.78 0.15 75;
 
-    --muted: 0.93 0.008 80;
-    --muted-foreground: 0.52 0.012 60;
+    --muted: 0.13 0 0;
+    --muted-foreground: 0.45 0.08 75;
 
-    --accent: 0.93 0.012 80;
-    --accent-foreground: 0.18 0.01 60;
+    --accent: 0.15 0 0;
+    --accent-foreground: 0.85 0.18 75;
 
-    --destructive: 0.48 0.18 25;
-    --destructive-foreground: 0.98 0.003 80;
+    --destructive: 0.55 0.2 25;
+    --destructive-foreground: 0.07 0 0;
 
-    --border: 0.84 0.015 70;
-    --input: 0.84 0.015 70;
-    --ring: 0.42 0.14 15;
+    --border: 0.55 0.12 75;
+    --input: 0.55 0.12 75;
+    --ring: 0.85 0.18 75;
 
     --radius: 0px;
 
-    --chart-1: 0.42 0.14 15;
-    --chart-2: 0.58 0.12 200;
-    --chart-3: 0.55 0.13 140;
-    --chart-4: 0.62 0.11 60;
-    --chart-5: 0.5 0.1 300;
+    --chart-1: 0.85 0.18 75;
+    --chart-2: 0.65 0.15 75;
+    --chart-3: 0.45 0.1 75;
+    --chart-4: 0.78 0.15 75;
+    --chart-5: 0.55 0.12 75;
 
-    --sidebar: 0.94 0.01 75;
-    --sidebar-foreground: 0.18 0.01 60;
-    --sidebar-primary: 0.42 0.14 15;
-    --sidebar-primary-foreground: 0.98 0.003 80;
-    --sidebar-accent: 0.9 0.012 75;
-    --sidebar-accent-foreground: 0.18 0.01 60;
-    --sidebar-border: 0.84 0.015 70;
-    --sidebar-ring: 0.42 0.14 15;
+    --sidebar: 0.1 0 0;
+    --sidebar-foreground: 0.78 0.15 75;
+    --sidebar-primary: 0.85 0.18 75;
+    --sidebar-primary-foreground: 0.07 0 0;
+    --sidebar-accent: 0.13 0 0;
+    --sidebar-accent-foreground: 0.78 0.15 75;
+    --sidebar-border: 0.55 0.12 75;
+    --sidebar-ring: 0.85 0.18 75;
+  }
+
+  /* Light mode: inverted TUI — dark amber on cream */
+  .light {
+    --background: 0.96 0.02 90;
+    --foreground: 0.28 0.08 75;
+
+    --card: 0.93 0.02 90;
+    --card-foreground: 0.28 0.08 75;
+
+    --popover: 0.93 0.02 90;
+    --popover-foreground: 0.28 0.08 75;
+
+    --primary: 0.45 0.14 75;
+    --primary-foreground: 0.96 0.02 90;
+
+    --secondary: 0.9 0.02 90;
+    --secondary-foreground: 0.28 0.08 75;
+
+    --muted: 0.9 0.02 90;
+    --muted-foreground: 0.45 0.06 75;
+
+    --accent: 0.88 0.03 90;
+    --accent-foreground: 0.28 0.08 75;
+
+    --destructive: 0.55 0.2 25;
+    --destructive-foreground: 0.96 0.02 90;
+
+    --border: 0.4 0.1 75;
+    --input: 0.4 0.1 75;
+    --ring: 0.45 0.14 75;
+
+    --sidebar: 0.93 0.02 90;
+    --sidebar-foreground: 0.28 0.08 75;
+    --sidebar-primary: 0.45 0.14 75;
+    --sidebar-primary-foreground: 0.96 0.02 90;
+    --sidebar-accent: 0.9 0.02 90;
+    --sidebar-accent-foreground: 0.28 0.08 75;
+    --sidebar-border: 0.4 0.1 75;
+    --sidebar-ring: 0.45 0.14 75;
   }
 
   * {
@@ -82,28 +105,37 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: "General Sans", sans-serif;
-    font-feature-settings: "ss01", "ss02";
+    font-family: "JetBrains Mono", monospace;
+    /* Subtle scanline effect */
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      oklch(0.85 0.18 75 / 0.015) 2px,
+      oklch(0.85 0.18 75 / 0.015) 4px
+    );
+  }
+
+  .light body {
+    background-image: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      oklch(0.45 0.14 75 / 0.04) 2px,
+      oklch(0.45 0.14 75 / 0.04) 4px
+    );
   }
 
   h1,
   h2,
   h3,
   h4 {
-    font-family: "Playfair Display", serif;
+    font-family: "JetBrains Mono", monospace;
   }
 }
 
-/* Editorial fine rules */
-.rule-top {
-  border-top: 3px double oklch(var(--foreground));
-}
-
-.rule-thin {
-  border-top: 1px solid oklch(var(--border));
-}
-
-/* Scanline / paper texture overlay */
-.paper-texture {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='4' height='4' fill='none'/%3E%3Cpath d='M0 0h1v1H0zm2 2h1v1H2z' fill='%23000' fill-opacity='0.025'/%3E%3C/svg%3E");
+/* TUI box utility */
+.tui-box {
+  border: 1px solid oklch(var(--border));
+  background: oklch(var(--card));
 }
