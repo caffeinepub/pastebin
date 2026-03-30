@@ -49,3 +49,17 @@ export function useCreatePaste() {
     },
   });
 }
+
+export function useCreatePasteBatch() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (inputs: { title: string; content: string }[]) => {
+      if (!actor) throw new Error("Not authenticated");
+      return actor.createPasteBatch(inputs);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pastes"] });
+    },
+  });
+}

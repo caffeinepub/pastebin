@@ -59,6 +59,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
                     [NEW PASTE]
                   </Link>
                 )}
+                {isLoggedIn && (
+                  <Link
+                    to="/import"
+                    data-ocid="nav.import_link"
+                    className="ml-2 text-foreground hover:text-primary transition-colors"
+                  >
+                    [IMPORT ARCHIVE]
+                  </Link>
+                )}
               </span>
               <span className="px-2 flex items-center gap-2">
                 {/* Dark/Light mode toggle */}

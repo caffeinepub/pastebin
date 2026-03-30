@@ -18,6 +18,7 @@ export interface Paste {
   'author' : Principal,
 }
 export type PasteId = bigint;
+export interface PasteInput { 'title' : string, 'content' : string }
 export interface PasteSummary {
   'id' : PasteId,
   'title' : string,
@@ -33,6 +34,7 @@ export interface _SERVICE {
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'createPaste' : ActorMethod<[string, string], PasteId>,
+  'createPasteBatch' : ActorMethod<[Array<PasteInput>], Array<PasteId>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getPaste' : ActorMethod<[PasteId], [] | [Paste]>,

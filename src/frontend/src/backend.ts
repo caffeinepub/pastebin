@@ -89,6 +89,8 @@ export class ExternalBlob {
         return this;
     }
 }
+export type Time = bigint;
+export type PasteId = bigint;
 export interface Paste {
     id: PasteId;
     title: string;
@@ -96,7 +98,6 @@ export interface Paste {
     createdAt: Time;
     author: Principal;
 }
-export type Time = bigint;
 export interface PasteSummary {
     id: PasteId;
     title: string;
@@ -106,7 +107,10 @@ export interface PasteSummary {
 export interface UserProfile {
     name: string;
 }
-export type PasteId = bigint;
+export interface PasteInput {
+    title: string;
+    content: string;
+}
 export enum UserRole {
     admin = "admin",
     user = "user",
@@ -116,6 +120,7 @@ export interface backendInterface {
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     createPaste(title: string, content: string): Promise<PasteId>;
+    createPasteBatch(inputs: Array<PasteInput>): Promise<Array<PasteId>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
     getPaste(id: PasteId): Promise<Paste | null>;
@@ -166,6 +171,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.createPaste(arg0, arg1);
+            return result;
+        }
+    }
+    async createPasteBatch(arg0: Array<PasteInput>): Promise<Array<PasteId>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.createPasteBatch(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.createPasteBatch(arg0);
             return result;
         }
     }

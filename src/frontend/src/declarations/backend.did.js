@@ -14,6 +14,10 @@ export const UserRole = IDL.Variant({
   'guest' : IDL.Null,
 });
 export const PasteId = IDL.Nat;
+export const PasteInput = IDL.Record({
+  'title' : IDL.Text,
+  'content' : IDL.Text,
+});
 export const UserProfile = IDL.Record({ 'name' : IDL.Text });
 export const Time = IDL.Int;
 export const Paste = IDL.Record({
@@ -34,6 +38,7 @@ export const idlService = IDL.Service({
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'createPaste' : IDL.Func([IDL.Text, IDL.Text], [PasteId], []),
+  'createPasteBatch' : IDL.Func([IDL.Vec(PasteInput)], [IDL.Vec(PasteId)], []),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getPaste' : IDL.Func([PasteId], [IDL.Opt(Paste)], ['query']),
@@ -56,6 +61,7 @@ export const idlFactory = ({ IDL }) => {
     'guest' : IDL.Null,
   });
   const PasteId = IDL.Nat;
+  const PasteInput = IDL.Record({ 'title' : IDL.Text, 'content' : IDL.Text });
   const UserProfile = IDL.Record({ 'name' : IDL.Text });
   const Time = IDL.Int;
   const Paste = IDL.Record({
@@ -76,6 +82,11 @@ export const idlFactory = ({ IDL }) => {
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'createPaste' : IDL.Func([IDL.Text, IDL.Text], [PasteId], []),
+    'createPasteBatch' : IDL.Func(
+        [IDL.Vec(PasteInput)],
+        [IDL.Vec(PasteId)],
+        [],
+      ),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getPaste' : IDL.Func([PasteId], [IDL.Opt(Paste)], ['query']),

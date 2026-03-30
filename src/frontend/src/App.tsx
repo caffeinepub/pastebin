@@ -11,6 +11,7 @@ import { Layout } from "./components/Layout";
 import { ThemeProvider } from "./context/ThemeContext";
 import { CreatePastePage } from "./pages/CreatePastePage";
 import { HomePage } from "./pages/HomePage";
+import { ImportArchivePage } from "./pages/ImportArchivePage";
 import { PasteDetailPage } from "./pages/PasteDetailPage";
 
 const queryClient = new QueryClient();
@@ -41,7 +42,18 @@ const pasteRoute = createRoute({
   component: PasteDetailPage,
 });
 
-const routeTree = rootRoute.addChildren([indexRoute, createRoute_, pasteRoute]);
+const importRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/import",
+  component: ImportArchivePage,
+});
+
+const routeTree = rootRoute.addChildren([
+  indexRoute,
+  createRoute_,
+  pasteRoute,
+  importRoute,
+]);
 
 const router = createRouter({ routeTree });
 

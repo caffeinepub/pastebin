@@ -8,7 +8,9 @@ import Runtime "mo:core/Runtime";
 import Time "mo:core/Time";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
+import Migration "migration";
 
+(with migration = Migration.run)
 actor {
   // Types
   type PasteId = Nat;
@@ -87,6 +89,36 @@ actor {
 
     pastes.add(id, paste);
     id;
+  };
+
+  // Batch create pastes (authenticated users only)
+  type PasteInput = {
+    title : Text;
+    content : Text;
+  };
+
+  public shared ({ caller }) func createPasteBatch(inputs : [PasteInput]) : async [PasteId] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only authenticated users can create pastes");
+    };
+
+    let ids = List.empty<PasteId>();
+    for (input in inputs.values()) {
+      let id = nextPasteId;
+      nextPasteId += 1;
+
+      let paste : Paste = {
+        id;
+        title = input.title;
+        content = input.content;
+        author = caller;
+        createdAt = Time.now();
+      };
+
+      pastes.add(id, paste);
+      ids.add(id);
+    };
+    ids.toArray();
   };
 
   // Get paste by ID (public - no authentication required)

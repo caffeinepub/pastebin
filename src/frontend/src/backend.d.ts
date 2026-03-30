@@ -7,6 +7,8 @@ export interface None {
     __kind__: "None";
 }
 export type Option<T> = Some<T> | None;
+export type Time = bigint;
+export type PasteId = bigint;
 export interface Paste {
     id: PasteId;
     title: string;
@@ -14,7 +16,6 @@ export interface Paste {
     createdAt: Time;
     author: Principal;
 }
-export type Time = bigint;
 export interface PasteSummary {
     id: PasteId;
     title: string;
@@ -24,7 +25,10 @@ export interface PasteSummary {
 export interface UserProfile {
     name: string;
 }
-export type PasteId = bigint;
+export interface PasteInput {
+    title: string;
+    content: string;
+}
 export enum UserRole {
     admin = "admin",
     user = "user",
@@ -33,6 +37,7 @@ export enum UserRole {
 export interface backendInterface {
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     createPaste(title: string, content: string): Promise<PasteId>;
+    createPasteBatch(inputs: Array<PasteInput>): Promise<Array<PasteId>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
     getPaste(id: PasteId): Promise<Paste | null>;
